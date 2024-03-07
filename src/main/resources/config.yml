@@ -1,0 +1,9 @@
+#Thanks for installing Kozers
+#Do not incorrectly format this file, it will get replaced with the default upon parse failure.
+#The values can be "incorrect" though, and nothing will get deleted.
+
+messages:
+  prefix:
+    string: "<#050505>[<#0055ff>Kozers<#050505>]"
+    #Colors are normal hex colors surrounded by angled brackets, and they act like normal minecraft color codes
+    color: "0055ff"

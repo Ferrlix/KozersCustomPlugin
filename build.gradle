@@ -1,0 +1,99 @@
+plugins {
+    id('java')
+    id('xyz.jpenilla.run-paper')  version('2.2.3')
+}
+
+group = 'prog.ferrlix'
+version = '0.1'
+
+repositories {
+    mavenLocal()
+    maven {
+        name = "papermc-repo"
+        url = "https://repo.papermc.io/repository/maven-public/"
+    }
+    maven {
+        name = "sonatype"
+        url = "https://oss.sonatype.org/content/groups/public/"
+    }
+    maven {
+        url = "https://repo.codemc.io/repository/maven-public/"
+    }
+    maven {
+        name= "jitpack"
+        url = "https://jitpack.io"
+    }
+    maven {
+        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+
+        // As of Gradle 5.1, you can limit this to only those
+        // dependencies you expect from it
+        content {
+            includeGroup 'org.bukkit'
+            includeGroup 'org.spigotmc'
+        }
+    }
+    maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
+    maven { url = 'https://oss.sonatype.org/content/repositories/central' }
+    maven {
+        name = 'glaremasters repo'
+        url = 'https://repo.glaremasters.me/repository/towny/'
+    }
+}
+
+dependencies {
+    compileOnly('io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT')
+    compileOnly('com.github.MilkBowl:VaultAPI:1.7')
+    compileOnly('de.tr7zw:item-nbt-api-plugin:2.12.2')
+    compileOnly("dev.jorel:commandapi-bukkit-core:9.3.0")
+    compileOnly('org.spigotmc:spigot:1.20.2-R0.1-SNAPSHOT')
+    compileOnly 'com.palmergames.bukkit.towny:towny:0.100.1.0'
+    implementation 'net.kyori:adventure-text-minimessage:4.16.0'
+}
+
+def targetJavaVersion = 17
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+
+    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+        options.release.set(targetJavaVersion)
+    }
+}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+}
+
+tasks {
+    runServer {
+        minecraftVersion("1.20.4") // or another
+
+        downloadPlugins {
+            url("https://ci.lucko.me/job/spark/400/artifact/spark-bukkit/build/libs/spark-1.10.59-bukkit.jar")
+            url("https://download.luckperms.net/1532/bukkit/loader/LuckPerms-Bukkit-5.4.119.jar")
+            url("https://github.com/SkriptLang/Skript/releases/download/2.8.2/Skript.jar")
+            url("https://github.com/ShaneBeee/SkBee/releases/download/3.3.0/SkBee-3.3.0.jar")
+            url("https://github.com/SkriptLang/skript-reflect/releases/download/v2.4/skript-reflect.jar")
+            url("https://cdn.modrinth.com/data/nfGCP9fk/versions/fiPNOHqu/item-nbt-api-plugin-2.12.2.jar")
+            url("https://github.com/MilkBowl/Vault/releases/download/1.7.3/Vault.jar")
+            url("https://github.com/JorelAli/CommandAPI/releases/download/9.3.0/CommandAPI-9.3.0.jar")
+        // [TOWNY] you need towny, no link because their github is a .zip not the direct .jar file
+            // add plugins here (see their docs)
+            // adding plugins this way is better than manually adding to the run context because anyone cloning your repo will have an equivalent plugin list
+        }
+    }
+}
