@@ -12,21 +12,20 @@ public class Colors{
     public static TextColor header(){return TextColor.color(59, 110, 255);}
     public static TextColor error(){return TextColor.color(255, 57, 77);}
     public static TextColor black(){return TextColor.color(0, 0, 0);}
+    public static TextColor white(){return TextColor.color(255, 255, 255);}
     public static TextColor prefix(){
         String configColor;
-        float[] rgb = null;
+        float[] rgb = {255,255,255};
         try {
             configColor = (String) config.getConfig().get("messages.prefix.color");
+            assert configColor != null:"Prefix Color does not exist in config!";
             Color color = Color.decode(configColor);
             rgb = color.getRGBColorComponents(rgb); // this array can be null, method creates a new one
         } catch (Exception e) {
             Kozers.logger().warning("Plugin prefix color from config threw an exception! (It is probably invalid)");
-            e.printStackTrace();
-            return black();
-        }if (rgb==null){
-            Kozers.logger().warning("Plugin prefix color from config is null!");
-            return black();
-        }
-        return TextColor.color(rgb[0],rgb[1],rgb[2]);
+            Kozers.logger().warning(e.getMessage());
+            Kozers.logger().warning(e.getCause().getMessage());
+            return white();
+        }return TextColor.color(rgb[0],rgb[1],rgb[2]);
     }
 }

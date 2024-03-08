@@ -1,8 +1,10 @@
 package prog.ferrlix.kozers.integration.towny;
 
 import com.palmergames.bukkit.towny.TownyAPI;
-import com.palmergames.bukkit.towny.object.*;
-import net.kyori.adventure.text.Component;
+import com.palmergames.bukkit.towny.object.Nation;
+import com.palmergames.bukkit.towny.object.Resident;
+import com.palmergames.bukkit.towny.object.Town;
+import com.palmergames.bukkit.towny.object.TownyPermission;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -12,7 +14,7 @@ import prog.ferrlix.kozers.Kozers;
 import java.util.*;
 
 public class TownyUtil {
-    private TownyAPI api = TownyAPI.getInstance();
+    private final TownyAPI api = TownyAPI.getInstance();
 
     private Map<TownyPermission.PermLevel, TownyPermission.ActionType> getTownyPermissions(){
         ArrayList<TownyPermission.ActionType> actionTypes = new ArrayList<>();
