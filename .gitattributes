@@ -11,4 +11,4 @@
 #*.es linguist-language=JAVASCRIPT
 
 #make sure javadocs dont count toward project language synopsis
-javadocs/** -linguist-documentation
+docs/** linguist-documentation
