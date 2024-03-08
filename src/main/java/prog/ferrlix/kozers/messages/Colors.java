@@ -7,12 +7,17 @@ import prog.ferrlix.kozers.util.ConfigUtil;
 import java.awt.*;
 
 public class Colors{
-    static ConfigUtil config = new ConfigUtil(Kozers.plugin(),"config.yml");
+    static ConfigUtil config = Kozers.config;
     public static TextColor content(){return TextColor.color(96, 204, 255);}
     public static TextColor header(){return TextColor.color(59, 110, 255);}
     public static TextColor error(){return TextColor.color(255, 57, 77);}
     public static TextColor black(){return TextColor.color(0, 0, 0);}
     public static TextColor white(){return TextColor.color(255, 255, 255);}
+
+    /**
+     * the prefix color from config.yml
+     * @return the TextColor result from the hex code at messages.prefix.color in config.yml
+     */
     public static TextColor prefix(){
         String configColor;
         float[] rgb = {255,255,255};

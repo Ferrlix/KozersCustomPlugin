@@ -13,10 +13,16 @@ import prog.ferrlix.kozers.Kozers;
 
 import java.util.*;
 
+/**
+ * Contains many helper methods for using the Towny API
+ */
 public class TownyUtil {
-    private final TownyAPI api = TownyAPI.getInstance();
+    /**
+     * Singleton TownyAPI instance
+     */
+    public final TownyAPI townyApi = TownyAPI.getInstance();
 
-    private Map<TownyPermission.PermLevel, TownyPermission.ActionType> getTownyPermissions(){
+    private @NotNull Map<TownyPermission.PermLevel, TownyPermission.ActionType> getTownyPermissions(){
         ArrayList<TownyPermission.ActionType> actionTypes = new ArrayList<>();
         actionTypes.add(TownyPermission.ActionType.ITEM_USE);
         actionTypes.add(TownyPermission.ActionType.BUILD);
@@ -36,8 +42,13 @@ public class TownyUtil {
         return townyPermissions;
     }
 
+    /**
+     * gets a resident from Player
+     * @param p Player
+     * @return Resident
+     */
     public Resident getResident(Player p){
-        return api.getResident(p);
+        return townyApi.getResident(p);
     }
     @Nullable
     public Town getTownOrNull(Player p){
@@ -45,11 +56,11 @@ public class TownyUtil {
     }
     @Nullable
     public Town getTownOrNull(String town){
-        return api.getTown(town);
+        return townyApi.getTown(town);
     }
     @Nullable
     public Town getTownOrNull(UUID uuid){
-        return api.getTown(uuid);
+        return townyApi.getTown(uuid);
     }
     @Nullable
     public Nation getNationOrNull(Player p){
@@ -57,14 +68,21 @@ public class TownyUtil {
     }
     @Nullable
     public Nation getNationOrNull(String nation){
-        return api.getNation(nation);
+        return townyApi.getNation(nation);
     }
     @Nullable
     public Nation getNationOrNull(UUID uuid){
-        return api.getNation(uuid);
+        return townyApi.getNation(uuid);
     }
+
+    /**
+     * Merge two towns using Towny API
+     * @param prevailingTown town that absorbs succumbingTown
+     * @param succumbingTown town to be deleted and absorbed by prevailingTown
+     * @return true if success, else false
+     */
     public boolean mergeTowns(Town prevailingTown, Town succumbingTown){
-        api.getDataSource().mergeTown(prevailingTown,succumbingTown);
+        townyApi.getDataSource().mergeTown(prevailingTown,succumbingTown);
         if (getTownOrNull(succumbingTown.getName()) != null){
             Kozers.logger().warning("Succumbing town still exists, merge failed");
             return false;
@@ -73,26 +91,13 @@ public class TownyUtil {
         }
     }
     public boolean getPVPAtLocation(Location location){
-        return api.isPVP(location);
+        return townyApi.isPVP(location);
     }
     @Nullable
     public TownyPermission getPermissionsAtLocationOrNull(Location location){
-        return api.getTownBlock(location).getPermissions();
+        return townyApi.getTownBlock(location).getPermissions();
     }
     public ArrayList<Town> getTowns(){
-        return (ArrayList<Town>) api.getTowns();
-    }
-    @NotNull
-    public String getTownTag(Player p){
-        Town town = null;
-        try{
-            town = api.getTown(p);}
-        catch(Exception e){
-            e.printStackTrace();
-        }
-        if (town==null){
-            return "null";
-        }
-        return town.getTag();
+        return (ArrayList<Town>) townyApi.getTowns();
     }
 }

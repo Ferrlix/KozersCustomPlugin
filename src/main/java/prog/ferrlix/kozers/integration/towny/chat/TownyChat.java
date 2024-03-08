@@ -92,7 +92,7 @@ public class TownyChat{
      * @param message the message the speaker sent
      * @param type the Government type (Town | Nation) that the speaker's message should get sent
      */
-    void sendChat(Player speaker, String message, @NotNull townyChatType type){
+    public void sendChat(Player speaker, String message, @NotNull townyChatType type){
         Government govern = null;
         switch(type){
             case TOWN -> govern = townyUtil.getTownOrNull(speaker);
@@ -206,14 +206,14 @@ public class TownyChat{
 
     /**
      * internal, do not use
-     * @return command for main class
+     * @return town command for registration
      */
     public CommandAPICommand getTownCommand(){
         return this.townCommand;
     }
     /**
      * internal, do not use
-     * @return command for main class
+     * @return nation command for registration
      */
     public CommandAPICommand getNationCommand(){
         return this.nationCommand;
@@ -241,6 +241,11 @@ public class TownyChat{
             return null;}
         return govern;
     }
+
+    /**
+     * removes a given Player from the towny chat map
+     * @param player the Player to remove from the map
+     */
     public void removePlayerFromChatMap(Player player){
         try{
             playerChatMap.remove(player);

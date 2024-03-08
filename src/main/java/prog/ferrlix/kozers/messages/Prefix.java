@@ -17,11 +17,12 @@ import java.util.Arrays;
 import static net.kyori.adventure.text.Component.text;
 
 public class Prefix {
-    ConfigUtil config = ConfigUtil.getDefaultConfig();
+    ConfigUtil config = Kozers.config;
 
-    public void reloadConfig(){
-        this.config = ConfigUtil.getDefaultConfig();
-    }
+    /**
+     * the Component prefix
+     * @return the Component from messages.prefix.string in config.yml
+     */
     @NotNull
     public Component get() {
         String prefix;

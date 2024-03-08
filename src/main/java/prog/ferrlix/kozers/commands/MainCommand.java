@@ -38,5 +38,9 @@ public class MainCommand {
                 }
             });
 
+    /**
+     * internal, do not use
+     * @return main command for registration
+     */
     public CommandAPICommand getMainCommand(){return this.mainCommand;}
 }

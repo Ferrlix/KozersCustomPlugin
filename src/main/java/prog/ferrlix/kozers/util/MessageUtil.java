@@ -13,9 +13,20 @@ import java.util.Arrays;
 import static net.kyori.adventure.text.Component.text;
 
 
-//Use this class for all messages going out of the plugin to player.
+/**
+ * Utilities commonly used in strings
+ */
 public class MessageUtil {
+    /**
+     * Should be the only MiniMessage.Builder instance
+     */
     public static MiniMessage.Builder miniMessageBuilder = MiniMessage.builder();
+
+    /**
+     * old method made by Ferrlix to manually parse a String, incase I dont want to use MiniMessage
+     * @param input String to parse
+     * @return Component
+     */
     public static Component legacystringToComponent(String input){
         TextComponent[] component = {text().build()};
         ArrayList<String> colorSplit = new ArrayList<>();
@@ -34,6 +45,12 @@ public class MessageUtil {
         Component finalComponent = text().append(component[0]).build();
         return finalComponent;
     }
+
+    /**
+     * use MiniMessage to deserialize a String
+     * @param input String to deserialize
+     * @return deserialized Component
+     */
     public static Component stringToComponent(String input){
         Component component = text().append(text("Invalid String input")).build();
         try{

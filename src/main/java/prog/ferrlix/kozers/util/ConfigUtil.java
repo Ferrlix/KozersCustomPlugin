@@ -10,6 +10,9 @@ import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * Configuration utilities
+ */
 public class ConfigUtil {
     private File file;
     private FileConfiguration config;

@@ -11,6 +11,9 @@ import prog.ferrlix.kozers.integration.towny.chat.TownyChat;
 
 import java.util.Map;
 
+/**
+ * handles AsyncChatEvent, mainly for TownyChat
+ */
 public class AsyncChatEvent implements Listener {
     Map<Player, Government> playerChatMap = Kozers.townyChat.getPlayerChatMap();
     TownyChat townyChat = Kozers.townyChat;
