@@ -5,14 +5,16 @@ import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.TownyPermission;
+
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import prog.ferrlix.kozers.Kozers;
 
 import java.util.*;
-
 /**
  * Contains many helper methods for using the Towny API
  */
@@ -21,8 +23,8 @@ public class TownyUtil {
      * static TownyAPI instance
      */
     public static TownyAPI townyApi = TownyAPI.getInstance();
-
-    private @NotNull Map<TownyPermission.PermLevel, TownyPermission.ActionType> getTownyPermissions(){
+    private static Map<TownyPermission.PermLevel, TownyPermission.ActionType> townyPermissionsMap;
+    static{
         ArrayList<TownyPermission.ActionType> actionTypes = new ArrayList<>();
         actionTypes.add(TownyPermission.ActionType.ITEM_USE);
         actionTypes.add(TownyPermission.ActionType.BUILD);
@@ -36,12 +38,12 @@ public class TownyUtil {
         Map<TownyPermission.PermLevel, TownyPermission.ActionType> townyPermissions = new HashMap<>();
         Iterator<TownyPermission.PermLevel> keyIterator = permLevels.iterator();
         Iterator<TownyPermission.ActionType> valueIterator = actionTypes.iterator();
-        while (keyIterator.hasNext() && valueIterator.hasNext()) {
-            townyPermissions.put(keyIterator.next(), valueIterator.next());
+        while (keyIterator.hasNext()) {
+            while (valueIterator.hasNext()) {
+                townyPermissions.put(keyIterator.next(), valueIterator.next());
+            }
         }
-        return townyPermissions;
     }
-
     /**
      * gets a resident from Player
      * @param p Player
@@ -74,7 +76,6 @@ public class TownyUtil {
     public Nation getNationOrNull(UUID uuid){
         return townyApi.getNation(uuid);
     }
-
     /**
      * Merge two towns using Towny API
      * @param prevailingTown town that absorbs succumbingTown

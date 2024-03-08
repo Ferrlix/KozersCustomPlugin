@@ -5,6 +5,7 @@ import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.StringArgument;
 import org.bukkit.entity.Player;
 import prog.ferrlix.kozers.Kozers;
+import prog.ferrlix.kozers.integration.towny.chat.TownyChat;
 import prog.ferrlix.kozers.messages.Colors;
 import prog.ferrlix.kozers.messages.Prefix;
 
@@ -28,7 +29,7 @@ public class MainCommand {
                                 );
                     }
                     case "chatmap","map","playerchatmap" -> {
-                        Map<Player, Government> map = Kozers.townyChat.getPlayerChatMap();
+                        Map<Player, Government> map = TownyChat.playerChatMap;
                         sender.sendMessage(" - KEYS  -  VALUES - ");
                         map.forEach((key, value) -> {
                             sender.sendMessage(" - " + key.toString() + " = " + value.toString());

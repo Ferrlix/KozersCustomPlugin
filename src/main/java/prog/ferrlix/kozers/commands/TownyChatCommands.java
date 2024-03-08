@@ -1,30 +1,34 @@
 package prog.ferrlix.kozers.commands;
 
+import com.palmergames.bukkit.towny.object.Government;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Town;
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.GreedyStringArgument;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
 import prog.ferrlix.kozers.Kozers;
 import prog.ferrlix.kozers.integration.towny.chat.TownyChat;
 import prog.ferrlix.kozers.messages.Colors;
 import prog.ferrlix.kozers.messages.Prefix;
 import prog.ferrlix.kozers.util.MessageUtil;
 
+import java.util.Map;
+
 import static net.kyori.adventure.text.Component.text;
 
 public class TownyChatCommands {
     Prefix prefix = new Prefix();
-    TownyChat townyChat = Kozers.townyChat;
+    Map<Player, Government> playerChatMap = TownyChat.playerChatMap;
     CommandAPICommand townCommand = new CommandAPICommand("townchat")
             .withOptionalArguments(new GreedyStringArgument("message"))
             .withAliases("tc")
             .executesPlayer((p,arguments) -> {
                 String message = (String) arguments.get("message");
                 if (p!=null) {
-                    if (townyChat.getPlayerChatMap().containsKey(p)){
-                        if (townyChat.getPlayerChatMap().get(p) instanceof Town){
-                            townyChat.removePlayerFromChatMap(p);
+                    if (playerChatMap.containsKey(p)){
+                        if (playerChatMap.get(p) instanceof Town){
+                            TownyChat.removePlayerFromChatMap(p);
                             p.sendMessage(text()
                                     .append(prefix.get().append(text(" ")))
                                     .append(text("Left town chat!").color(Colors.error()))
@@ -35,7 +39,7 @@ public class TownyChatCommands {
                                     .append(text("Already in nation chat!").color(Colors.error()))
                                     .build());}
                     }else if (message == null){
-                        Object govern = townyChat.addPlayerToChatMap(p, TownyChat.townyChatType.TOWN);
+                        Object govern = TownyChat.addPlayerToChatMap(p, TownyChat.townyChatType.TOWN);
                         if (govern == null) {
                             Kozers.logger.info("Player " + p.getName() + " could not join town chat");}
                         else{
@@ -45,9 +49,9 @@ public class TownyChatCommands {
                                     .build());
                             Kozers.logger.info(p.getName() + " joined town chat");}
                     }else{
-                        townyChat.addPlayerToChatMap(p, TownyChat.townyChatType.TOWN);
-                        townyChat.sendChat(p,message, TownyChat.townyChatType.TOWN);
-                        townyChat.removePlayerFromChatMap(p);
+                        TownyChat.addPlayerToChatMap(p, TownyChat.townyChatType.TOWN);
+                        TownyChat.sendChat(p,message, TownyChat.townyChatType.TOWN);
+                        TownyChat.removePlayerFromChatMap(p);
                     }}})
             .executesConsole(sender -> {
                 ConsoleCommandSender console = (ConsoleCommandSender) sender;
@@ -59,9 +63,9 @@ public class TownyChatCommands {
             .executesPlayer((p,arguments) -> {
                 String message = (String) arguments.get("message");
                 if (p!=null) {
-                    if (townyChat.getPlayerChatMap().containsKey(p)){
-                        if (townyChat.getPlayerChatMap().get(p) instanceof Nation){
-                            townyChat.removePlayerFromChatMap(p);
+                    if (playerChatMap.containsKey(p)){
+                        if (playerChatMap.get(p) instanceof Nation){
+                            TownyChat.removePlayerFromChatMap(p);
                             p.sendMessage(text()
                                     .append(prefix.get().append(text(" ")))
                                     .append(text("Left nation chat!").color(Colors.error()))
@@ -72,7 +76,7 @@ public class TownyChatCommands {
                                     .append(text("Already in town chat!").color(Colors.error()))
                                     .build());}
                     }else if (message == null){
-                        Object govern = townyChat.addPlayerToChatMap(p, TownyChat.townyChatType.NATION);
+                        Object govern = TownyChat.addPlayerToChatMap(p, TownyChat.townyChatType.NATION);
                         if (govern == null) {
                             Kozers.logger.info("Player " + p.getName() + " could not join nation chat");
                             p.sendMessage(text()
@@ -87,9 +91,9 @@ public class TownyChatCommands {
                                     .build());
                             Kozers.logger.info(p.displayName() + " joined nation chat");}
                     }else{
-                        townyChat.addPlayerToChatMap(p, TownyChat.townyChatType.NATION);
-                        townyChat.sendChat(p,message, TownyChat.townyChatType.NATION);
-                        townyChat.removePlayerFromChatMap(p);
+                        TownyChat.addPlayerToChatMap(p, TownyChat.townyChatType.NATION);
+                        TownyChat.sendChat(p,message, TownyChat.townyChatType.NATION);
+                        TownyChat.removePlayerFromChatMap(p);
                     }}})
             .executesConsole(sender -> {
                 ConsoleCommandSender console = (ConsoleCommandSender) sender;

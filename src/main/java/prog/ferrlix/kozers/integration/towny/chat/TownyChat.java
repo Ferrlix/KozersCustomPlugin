@@ -65,7 +65,7 @@ public class TownyChat{
      * removes a given Player from the towny chat map
      * @param player the Player to remove from the map
      */
-    public void removePlayerFromChatMap(Player player){
+    public static void removePlayerFromChatMap(Player player){
         try{
             playerChatMap.remove(player);
         }catch(Exception e){e.printStackTrace();}
@@ -83,7 +83,7 @@ public class TownyChat{
      * @param message the message the speaker sent
      * @param type the Government type (Town | Nation) that the speaker's message should get sent
      */
-    public void sendChat(Player speaker, Component message, @NotNull townyChatType type){
+    public static void sendChat(Player speaker, Component message, @NotNull townyChatType type){
         Government govern = null;
         switch(type){
             case TOWN -> govern = townyUtil.getTownOrNull(speaker);
@@ -120,7 +120,7 @@ public class TownyChat{
      * @param message the message the speaker sent
      * @param type the Government type (Town | Nation) that the speaker's message should get sent
      */
-    public void sendChat(Player speaker, String message, @NotNull townyChatType type){
+    public static void sendChat(Player speaker, String message, @NotNull townyChatType type){
         Government govern = null;
         switch(type){
             case TOWN -> govern = townyUtil.getTownOrNull(speaker);

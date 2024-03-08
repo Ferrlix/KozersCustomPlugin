@@ -13,8 +13,9 @@ import static net.kyori.adventure.text.Component.text;
 
 public class StringUtil {
     public static TextColor hexToTextColor(String hexCode) {
-        if (hexCode.matches("^#[A-Fa-f0-9]{6}$")) {
-            hexCode = hexCode.replace("#", "");
+        if (hexCode.matches("^#?[A-Fa-f0-9]{6}$")) {
+            if (!hexCode.startsWith("#"))
+                hexCode = "#" + hexCode;
             return TextColor.fromHexString(hexCode);
         }
         return TextColor.color(255, 255, 255); //fallback color

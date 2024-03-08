@@ -5,6 +5,7 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
+import org.jetbrains.annotations.NotNull;
 import prog.ferrlix.kozers.Kozers;
 
 import java.util.ArrayList;
@@ -20,10 +21,9 @@ public class MessageUtil {
     /**
      * Should be the only MiniMessage.Builder instance
      */
-    public static MiniMessage.Builder miniMessageBuilder = MiniMessage.builder();
-
+    public static MiniMessage.Builder builder = MiniMessage.builder();
     /**
-     * old method made to manually parse a String, incase I dont want to use MiniMessage
+     * old method made to manually parse a String, in-case I don't want to use MiniMessage
      * @param input String to parse
      * @return Component
      */
@@ -43,19 +43,12 @@ public class MessageUtil {
         });
         return text().append(component[0]).build();
     }
-
     /**
      * use MiniMessage to deserialize a String
      * @param input String to deserialize
      * @return deserialized Component
      */
-    public static Component stringToComponent(String input){
-        Component component = text().append(text("Invalid String input")).build();
-        try{
-            component = MiniMessage.miniMessage().deserialize(input);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        return component;
+    public static @NotNull Component stringToComponent(String input){
+        return MiniMessage.miniMessage().deserialize(input);
     }
 }

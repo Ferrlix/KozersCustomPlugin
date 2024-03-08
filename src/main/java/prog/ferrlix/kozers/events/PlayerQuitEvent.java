@@ -14,12 +14,11 @@ import java.util.Map;
  */
 public class PlayerQuitEvent implements Listener {
     Map<Player, Government> playerChatMap = TownyChat.playerChatMap;
-    TownyChat townyChat = Kozers.townyChat;
     @EventHandler
     private void onQuit(org.bukkit.event.player.PlayerQuitEvent event){
         Player p = event.getPlayer();
         if (playerChatMap.containsKey(p)){
-            townyChat.removePlayerFromChatMap(p);
+            TownyChat.removePlayerFromChatMap(p);
         }
     }
 }

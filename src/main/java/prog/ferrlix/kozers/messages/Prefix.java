@@ -1,24 +1,14 @@
 package prog.ferrlix.kozers.messages;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.format.TextColor;
-import org.bukkit.Bukkit;
-import org.bukkit.Color;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import prog.ferrlix.kozers.Kozers;
 import prog.ferrlix.kozers.util.ConfigUtil;
 import prog.ferrlix.kozers.util.MessageUtil;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import static net.kyori.adventure.text.Component.text;
-
 public class Prefix {
     ConfigUtil config = ConfigUtil.getInstance(Kozers.plugin,"config.yml");
-
     /**
      * the Component prefix
      * @return the Component from messages.prefix.string in config.yml

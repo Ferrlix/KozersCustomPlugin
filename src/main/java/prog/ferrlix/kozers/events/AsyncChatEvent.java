@@ -16,7 +16,6 @@ import java.util.Map;
  */
 public class AsyncChatEvent implements Listener {
     Map<Player, Government> playerChatMap = TownyChat.playerChatMap;
-    TownyChat townyChat = Kozers.townyChat;
     @EventHandler
     private void onChat(io.papermc.paper.event.player.AsyncChatEvent event){
         Player p = event.getPlayer();
@@ -25,9 +24,9 @@ public class AsyncChatEvent implements Listener {
             event.setCancelled(true);
             Object govern = playerChatMap.get(p);
             if (govern instanceof Town){
-                townyChat.sendChat(p, event.message(), TownyChat.townyChatType.TOWN);
+                TownyChat.sendChat(p, event.message(), TownyChat.townyChatType.TOWN);
             }else if (govern instanceof Nation){
-                townyChat.sendChat(p, event.message(), TownyChat.townyChatType.NATION);
+                TownyChat.sendChat(p, event.message(), TownyChat.townyChatType.NATION);
             }
         }else{
             Kozers.logger.info(p.getName() + " was not in the chat map, message ignored - TownyChat");

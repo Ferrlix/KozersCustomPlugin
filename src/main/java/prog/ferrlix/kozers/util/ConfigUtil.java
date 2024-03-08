@@ -4,6 +4,7 @@ import org.apache.commons.io.IOUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 import prog.ferrlix.kozers.Kozers;
 
 import java.io.*;
@@ -21,8 +22,6 @@ public class ConfigUtil {
     ConfigUtil(String path){
         register(path);
     }
-
-
     public boolean save(){
         try {
             this.config.save(this.file);
@@ -33,7 +32,6 @@ public class ConfigUtil {
         }
     }
     private static Map<String,ConfigUtil> soleInstances = null;
-
     /**
      * Get the instance from the instance map
      * every file has one instance for itself and no more
@@ -41,7 +39,7 @@ public class ConfigUtil {
      * @param fileName name of file in the plugin folder
      * @return The configuration
      */
-    public static synchronized ConfigUtil getInstance(Plugin plugin,String fileName){
+    public static synchronized ConfigUtil getInstance(@NotNull Plugin plugin, String fileName){
         String path = plugin.getDataFolder().getAbsolutePath() + "/" + fileName;
         if (!new File(path).exists()){
             Kozers.logger.severe("Path in data folder %s does not exist!".formatted(path));
@@ -73,6 +71,10 @@ public class ConfigUtil {
     }
     public File getFile(){return this.file;}
     public FileConfiguration getConfig(){return this.config;}
+    /**
+     * Inserts / deletes keys in this#file using the corresponding file in resources.
+     * Doesn't modify values, only cleans up unknown keys and adds nonexistent keys
+     */
     public void matchConfig() {
         try {
             InputStream is = Kozers.plugin.getResource(file.getName());

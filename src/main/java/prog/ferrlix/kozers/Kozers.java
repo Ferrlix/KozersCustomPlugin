@@ -5,7 +5,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import prog.ferrlix.kozers.commands.*;
 import prog.ferrlix.kozers.events.*;
-import prog.ferrlix.kozers.integration.towny.chat.TownyChat;
 import prog.ferrlix.kozers.util.ConfigUtil;
 
 import java.util.logging.Logger;
@@ -17,15 +16,12 @@ import java.util.logging.Logger;
  */
 public final class Kozers extends JavaPlugin {
     public static Kozers instance;
-    public static TownyChat townyChat;
-    public static AsyncChatEvent chatEvent;
-    public static PlayerQuitEvent quitEvent;
     public static Plugin plugin;
     public static Logger logger;
-    public ConfigUtil config;
     public static boolean debug = true;
-    public Kozers(){instance = this;}
-
+    ConfigUtil config;
+    public Kozers(){
+        instance = this;}
     @Override
     public void onEnable() {
         // Plugin startup logic
@@ -38,27 +34,26 @@ public final class Kozers extends JavaPlugin {
         Kozers.logger.info("Kozers fully enabled!");
     }
     public void reload(){
-        this.getLogger().info("Kozers Custom Plugin Reloading!");
+        logger.info("Kozers Custom Plugin Reloading!");
         onDisable();
         onEnable();
-        this.getLogger().info("Kozers Custom Plugin Successfully Reloaded!");
+        logger.info("Kozers Custom Plugin Successfully Reloaded!");
     }
-    private void instantiateStaticVariables(){
+    //this exists to update static variables upon reload, because I cannot re-instantiate the class and use static{}
+    void instantiateStaticVariables(){
         plugin = this;
         logger = this.getLogger();
         config = ConfigUtil.getInstance(this,"config.yml");
         debug = (boolean) config.getConfig().get("settings.debug", debug);
-        quitEvent = new PlayerQuitEvent();
-        chatEvent = new AsyncChatEvent();
     }
-    private void registerCommands(){
+    void registerCommands(){
         new TownyChatCommands().getNationCommand().register();
         new TownyChatCommands().getTownCommand().register();
         new MainCommand().getMainCommand().register();
     }
-    private void registerEvents(){
-        getServer().getPluginManager().registerEvents(chatEvent, this);
-        getServer().getPluginManager().registerEvents(quitEvent, this);
+    void registerEvents(){
+        getServer().getPluginManager().registerEvents(new AsyncChatEvent(), this);
+        getServer().getPluginManager().registerEvents(new PlayerQuitEvent(), this);
     }
     @Override
     public void onDisable() {
