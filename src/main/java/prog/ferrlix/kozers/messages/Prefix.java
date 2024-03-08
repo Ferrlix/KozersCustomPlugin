@@ -17,7 +17,7 @@ import java.util.Arrays;
 import static net.kyori.adventure.text.Component.text;
 
 public class Prefix {
-    ConfigUtil config = Kozers.config;
+    ConfigUtil config = ConfigUtil.getInstance(Kozers.plugin,"config.yml");
 
     /**
      * the Component prefix
@@ -25,14 +25,13 @@ public class Prefix {
      */
     @NotNull
     public Component get() {
-        String prefix;
         Component finalComponent;
         try {
             String string = "[Kozers]"; // fallback prefix
             string = config.getConfig().get("messages.prefix.string", string).toString();
             finalComponent = MessageUtil.stringToComponent(string);
         } catch (Exception e) {
-            Kozers.logger().warning("Plugin prefix from config threw an exception! (It is probably invalid)");
+            Kozers.logger.warning("Plugin prefix from config threw an exception! (It is probably invalid)");
             e.printStackTrace();
             return text().build();
         }

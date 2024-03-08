@@ -23,7 +23,7 @@ public class MessageUtil {
     public static MiniMessage.Builder miniMessageBuilder = MiniMessage.builder();
 
     /**
-     * old method made by Ferrlix to manually parse a String, incase I dont want to use MiniMessage
+     * old method made to manually parse a String, incase I dont want to use MiniMessage
      * @param input String to parse
      * @return Component
      */
@@ -31,7 +31,6 @@ public class MessageUtil {
         TextComponent[] component = {text().build()};
         ArrayList<String> colorSplit = new ArrayList<>();
         colorSplit.addAll(Arrays.asList(input.split("[<>]")));
-        //Kozers.logger().info("Strings will follow...");
         TextColor[] color = {TextColor.color(255, 255, 255)}; //default color in-case it doesn't start with one
         colorSplit.forEach(s -> {
             if (!s.isBlank()){
@@ -42,8 +41,7 @@ public class MessageUtil {
                 }
             }
         });
-        Component finalComponent = text().append(component[0]).build();
-        return finalComponent;
+        return text().append(component[0]).build();
     }
 
     /**

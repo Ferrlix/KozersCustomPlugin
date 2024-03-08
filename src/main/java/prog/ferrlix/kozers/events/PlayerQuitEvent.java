@@ -13,7 +13,7 @@ import java.util.Map;
  * handles the PlayerQuitEvent, mainly for TownyChat
  */
 public class PlayerQuitEvent implements Listener {
-    Map<Player, Government> playerChatMap = Kozers.townyChat.getPlayerChatMap();
+    Map<Player, Government> playerChatMap = TownyChat.playerChatMap;
     TownyChat townyChat = Kozers.townyChat;
     @EventHandler
     private void onQuit(org.bukkit.event.player.PlayerQuitEvent event){

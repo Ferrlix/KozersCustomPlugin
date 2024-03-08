@@ -9,19 +9,20 @@ import prog.ferrlix.kozers.Kozers;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
 
 /**
- * Configuration utilities
+ * Singletons Class for Configuration Utilities
+ * Each file has its own instance, which are managed in ConfigUtilInstanceHelper
  */
 public class ConfigUtil {
     private File file;
     private FileConfiguration config;
-    public ConfigUtil(Plugin plugin, String path){
-        this(plugin.getDataFolder().getAbsolutePath() + "/" + path);
-    }
-    public ConfigUtil(String path){
+    ConfigUtil(String path){
         register(path);
     }
+
+
     public boolean save(){
         try {
             this.config.save(this.file);
@@ -31,12 +32,38 @@ public class ConfigUtil {
             return false;
         }
     }
+    private static Map<String,ConfigUtil> soleInstances = null;
+
+    /**
+     * Get the instance from the instance map
+     * every file has one instance for itself and no more
+     * @param plugin this plugin instance, from static field in main class
+     * @param fileName name of file in the plugin folder
+     * @return The configuration
+     */
+    public static synchronized ConfigUtil getInstance(Plugin plugin,String fileName){
+        String path = plugin.getDataFolder().getAbsolutePath() + "/" + fileName;
+        if (!new File(path).exists()){
+            Kozers.logger.severe("Path in data folder %s does not exist!".formatted(path));
+        }
+        ConfigUtil instance = soleInstances.get(path);
+        if (instance == null)
+            soleInstances.put(path, new ConfigUtil(path));
+        instance.register(path);
+        return instance;
+    }
     protected void register(String path){
         try{
-        this.file = new File(path);
-        if (this.file.length() == 0){writeInputStreamToFile(Kozers.plugin().getResource("config.yml"), this.file);}
-        this.config = YamlConfiguration.loadConfiguration(this.file);
-        matchConfig();
+            File tmpFile = new File(path);
+            if (tmpFile.length() == 0){
+                String[] paths = path.split("/");
+                path = paths[paths.length - 1];
+                InputStream resource = Kozers.plugin.getResource(path);
+                if (resource != null){
+                    writeInputStreamToFile(Kozers.plugin.getResource(path), tmpFile);}}
+            this.file = tmpFile;
+            this.config = YamlConfiguration.loadConfiguration(this.file);
+            matchConfig();
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -46,12 +73,9 @@ public class ConfigUtil {
     }
     public File getFile(){return this.file;}
     public FileConfiguration getConfig(){return this.config;}
-    public static ConfigUtil getDefaultConfig(){
-        return new ConfigUtil(Kozers.plugin(), "config.yml");
-    }
     public void matchConfig() {
         try {
-            InputStream is = Kozers.plugin().getResource(file.getName());
+            InputStream is = Kozers.plugin.getResource(file.getName());
             if (is != null) {
                 YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(file);
                 for (String key : defConfig.getConfigurationSection("").getKeys(false))

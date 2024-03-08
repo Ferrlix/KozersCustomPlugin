@@ -18,9 +18,9 @@ import java.util.*;
  */
 public class TownyUtil {
     /**
-     * Singleton TownyAPI instance
+     * static TownyAPI instance
      */
-    public final TownyAPI townyApi = TownyAPI.getInstance();
+    public static TownyAPI townyApi = TownyAPI.getInstance();
 
     private @NotNull Map<TownyPermission.PermLevel, TownyPermission.ActionType> getTownyPermissions(){
         ArrayList<TownyPermission.ActionType> actionTypes = new ArrayList<>();
@@ -84,7 +84,7 @@ public class TownyUtil {
     public boolean mergeTowns(Town prevailingTown, Town succumbingTown){
         townyApi.getDataSource().mergeTown(prevailingTown,succumbingTown);
         if (getTownOrNull(succumbingTown.getName()) != null){
-            Kozers.logger().warning("Succumbing town still exists, merge failed");
+            Kozers.logger.warning("Succumbing town still exists, merge failed");
             return false;
         }else{
             return true;

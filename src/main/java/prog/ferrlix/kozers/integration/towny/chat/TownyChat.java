@@ -28,17 +28,48 @@ import static net.kyori.adventure.text.Component.text;
  * Handles all interactions between player and plugin regarding Towny and chatting
  */
 public class TownyChat{
+    static TownyUtil townyUtil = new TownyUtil();
     /**
      * the towny chat map
      */
-    private final Map<Player, Government> playerChatMap = new HashMap<>();
-
+    public static Map<Player, Government> playerChatMap = new HashMap<>();
     /**
      * get the map of players who are chatting in Government chats of some sort
      * @return The map of players in chat
      */
-    public Map<Player, Government> getPlayerChatMap(){return this.playerChatMap;}
-
+    public Map<Player, Government> getPlayerChatMap(){
+        return playerChatMap;}
+    /**
+     * add a player to the towny chat map for handling
+     * @param player the Player key to add the map
+     * @param type the type to add, because a Player can have two Governments at the same time
+     * @return The Government value that was added with the Player key
+     */
+    public static @Nullable Government addPlayerToChatMap(Player player, townyChatType type){
+        Government govern = null;
+        switch(type){
+            case TOWN -> govern = townyUtil.getTownOrNull(player);
+            case NATION -> govern = townyUtil.getNationOrNull(player);
+        }
+        if (govern==null){
+            return null;
+        }
+        try{
+            playerChatMap.put(player,govern);
+        }catch(Exception e){
+            e.printStackTrace();
+            return null;}
+        return govern;
+    }
+    /**
+     * removes a given Player from the towny chat map
+     * @param player the Player to remove from the map
+     */
+    public void removePlayerFromChatMap(Player player){
+        try{
+            playerChatMap.remove(player);
+        }catch(Exception e){e.printStackTrace();}
+    }
     /**
      * internal chat types used in Map iteration and chat events
      */
@@ -46,8 +77,6 @@ public class TownyChat{
         TOWN,
         NATION
     }
-    TownyUtil townyUtil = new TownyUtil();
-
     /**
      * send a towny chat
      * @param speaker the Player who sent the message
@@ -85,7 +114,6 @@ public class TownyChat{
             player.sendMessage(componentMessage);
         }
     }
-
     /**
      * send a towny chat
      * @param speaker the Player who sent the message
@@ -122,133 +150,5 @@ public class TownyChat{
         for (Player player : targets) {
             player.sendMessage(componentMessage);
         }
-    }
-    Prefix prefix = new Prefix();
-    CommandAPICommand townCommand = new CommandAPICommand("townchat")
-            .withOptionalArguments(new GreedyStringArgument("message"))
-            .withAliases("tc")
-            .executesPlayer((p,arguments) -> {
-                String message = (String) arguments.get("message");
-                if (p!=null) {
-                    if (playerChatMap.containsKey(p)){
-                        if (playerChatMap.get(p) instanceof Town){
-                            removePlayerFromChatMap(p);
-                            p.sendMessage(text()
-                                    .append(prefix.get().append(text(" ")))
-                                    .append(text("Left town chat!").color(Colors.error()))
-                                    .build());
-                        }else{
-                            p.sendMessage(text()
-                                    .append(prefix.get().append(text(" ")))
-                                    .append(text("Already in nation chat!").color(Colors.error()))
-                                    .build());}
-                    }else if (message == null){
-                        Object govern = addPlayerToChatMap(p,townyChatType.TOWN);
-                        if (govern == null) {
-                            Kozers.logger().info("Player " + p.getName() + " could not join town chat");}
-                        else{
-                            p.sendMessage(text()
-                                    .append(prefix.get().append(text(" ")))
-                                    .append(text("Successfully joined town chat!").color(Colors.content()))
-                                    .build());
-                            Kozers.logger().info(p.getName() + " joined town chat");}
-                    }else{
-                        addPlayerToChatMap(p,townyChatType.TOWN);
-                        sendChat(p,message,townyChatType.TOWN);
-                        removePlayerFromChatMap(p);
-                    }}})
-            .executesConsole(sender -> {
-                ConsoleCommandSender console = (ConsoleCommandSender) sender;
-                console.sendMessage("Console cannot join town chat :D");
-            });
-    CommandAPICommand nationCommand = new CommandAPICommand("nationchat")
-            .withOptionalArguments(new GreedyStringArgument("message"))
-            .withAliases("nc")
-            .executesPlayer((p,arguments) -> {
-                String message = (String) arguments.get("message");
-                if (p!=null) {
-                    if (playerChatMap.containsKey(p)){
-                        if (playerChatMap.get(p) instanceof Nation){
-                            removePlayerFromChatMap(p);
-                            p.sendMessage(text()
-                                    .append(prefix.get().append(text(" ")))
-                                    .append(text("Left nation chat!").color(Colors.error()))
-                                    .build());
-                        }else{
-                            p.sendMessage(text()
-                                    .append(prefix.get().append(text(" ")))
-                                    .append(text("Already in town chat!").color(Colors.error()))
-                                    .build());}
-                    }else if (message == null){
-                        Object govern = addPlayerToChatMap(p,townyChatType.NATION);
-                        if (govern == null) {
-                            Kozers.logger().info("Player " + p.getName() + " could not join nation chat");
-                            p.sendMessage(text()
-                                    .append(prefix.get().append(text(" ")))
-                                    .append(MessageUtil.stringToComponent("<#ff0000>Could not join nation chat because you are not in a <#0000ff>nation!"))
-                                    .build());
-                        }
-                        else{
-                            p.sendMessage(text()
-                                    .append(prefix.get().append(text(" ")))
-                                    .append(text("Successfully joined nation chat!").color(Colors.content()))
-                                    .build());
-                            Kozers.logger().info(p.displayName() + " joined nation chat");}
-                    }else{
-                        addPlayerToChatMap(p,townyChatType.NATION);
-                        sendChat(p,message,townyChatType.NATION);
-                        removePlayerFromChatMap(p);
-                    }}})
-            .executesConsole(sender -> {
-                ConsoleCommandSender console = (ConsoleCommandSender) sender;
-                console.sendMessage("Console cannot join nation chat :D");
-            });
-
-    /**
-     * internal, do not use
-     * @return town command for registration
-     */
-    public CommandAPICommand getTownCommand(){
-        return this.townCommand;
-    }
-    /**
-     * internal, do not use
-     * @return nation command for registration
-     */
-    public CommandAPICommand getNationCommand(){
-        return this.nationCommand;
-    }
-
-    /**
-     * add a player to the towny chat map for handling
-     * @param player the Player key to add the map
-     * @param type the type to add, because a Player can have two Governments at the same time
-     * @return The Government value that was added with the Player key
-     */
-    public @Nullable Government addPlayerToChatMap(Player player, townyChatType type){
-        Government govern = null;
-        switch(type){
-            case TOWN -> govern = townyUtil.getTownOrNull(player);
-            case NATION -> govern = townyUtil.getNationOrNull(player);
-        }
-        if (govern==null){
-            return null;
-        }
-        try{
-            playerChatMap.put(player,govern);
-        }catch(Exception e){
-            e.printStackTrace();
-            return null;}
-        return govern;
-    }
-
-    /**
-     * removes a given Player from the towny chat map
-     * @param player the Player to remove from the map
-     */
-    public void removePlayerFromChatMap(Player player){
-        try{
-            playerChatMap.remove(player);
-        }catch(Exception e){e.printStackTrace();}
     }
 }

@@ -15,13 +15,13 @@ import java.util.Map;
  * handles AsyncChatEvent, mainly for TownyChat
  */
 public class AsyncChatEvent implements Listener {
-    Map<Player, Government> playerChatMap = Kozers.townyChat.getPlayerChatMap();
+    Map<Player, Government> playerChatMap = TownyChat.playerChatMap;
     TownyChat townyChat = Kozers.townyChat;
     @EventHandler
     private void onChat(io.papermc.paper.event.player.AsyncChatEvent event){
         Player p = event.getPlayer();
         if (playerChatMap.containsKey(p)) {
-            Kozers.logger().info(p.getName() + " Sent a message and is in the player chat map, sending message! - TownyChat");
+            Kozers.logger.info(p.getName() + " Sent a message and is in the player chat map, sending message! - TownyChat");
             event.setCancelled(true);
             Object govern = playerChatMap.get(p);
             if (govern instanceof Town){
@@ -30,7 +30,7 @@ public class AsyncChatEvent implements Listener {
                 townyChat.sendChat(p, event.message(), TownyChat.townyChatType.NATION);
             }
         }else{
-            Kozers.logger().info(p.getName() + " was not in the chat map, message ignored - TownyChat");
+            Kozers.logger.info(p.getName() + " was not in the chat map, message ignored - TownyChat");
         }
     }
 }

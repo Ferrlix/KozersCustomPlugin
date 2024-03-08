@@ -13,7 +13,6 @@ import java.util.Map;
 import static net.kyori.adventure.text.Component.text;
 
 public class MainCommand {
-
     CommandAPICommand mainCommand = new CommandAPICommand("kozers")
             .withOptionalArguments(new StringArgument("action"))
             .executes((sender, arguments) -> {
@@ -37,7 +36,6 @@ public class MainCommand {
                     }
                 }
             });
-
     /**
      * internal, do not use
      * @return main command for registration
