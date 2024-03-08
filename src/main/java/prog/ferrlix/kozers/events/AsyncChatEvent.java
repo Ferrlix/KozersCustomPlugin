@@ -1,5 +1,6 @@
 package prog.ferrlix.kozers.events;
 
+import com.palmergames.bukkit.towny.object.Government;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Town;
 import org.bukkit.entity.Player;
@@ -11,7 +12,7 @@ import prog.ferrlix.kozers.integration.towny.chat.TownyChat;
 import java.util.Map;
 
 public class AsyncChatEvent implements Listener {
-    Map<Player, Object> playerChatMap = Kozers.townyChat.getPlayerChatMap();
+    Map<Player, Government> playerChatMap = Kozers.townyChat.getPlayerChatMap();
     TownyChat townyChat = Kozers.townyChat;
     @EventHandler
     private void onChat(io.papermc.paper.event.player.AsyncChatEvent event){

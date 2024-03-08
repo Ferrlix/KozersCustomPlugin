@@ -12,7 +12,13 @@ import prog.ferrlix.kozers.util.ConfigUtil;
 
 import java.util.logging.Logger;
 
+/**
+ * Main plugin class
+ */
 public final class Kozers extends JavaPlugin {
+    /**
+     * public instance of the plugin accessible anywhere
+     */
     public static Kozers instance;
     public static TownyChat townyChat;
     public static AsyncChatEvent chatEvent;

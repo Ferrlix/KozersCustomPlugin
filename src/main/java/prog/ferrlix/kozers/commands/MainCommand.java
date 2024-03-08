@@ -1,5 +1,6 @@
 package prog.ferrlix.kozers.commands;
 
+import com.palmergames.bukkit.towny.object.Government;
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.StringArgument;
 import org.bukkit.entity.Player;
@@ -28,7 +29,7 @@ public class MainCommand {
                                 );
                     }
                     case "chatmap","map","playerchatmap" -> {
-                        Map<Player, Object> map = Kozers.townyChat.getPlayerChatMap();
+                        Map<Player, Government> map = Kozers.townyChat.getPlayerChatMap();
                         sender.sendMessage(" - KEYS  -  VALUES - ");
                         map.forEach((key, value) -> {
                             sender.sendMessage(" - " + key.toString() + " = " + value.toString());

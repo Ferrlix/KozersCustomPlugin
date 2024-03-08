@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"prog.ferrlix.kozers"},{"l":"prog.ferrlix.kozers.commands"},{"l":"prog.ferrlix.kozers.events"},{"l":"prog.ferrlix.kozers.integration.towny"},{"l":"prog.ferrlix.kozers.integration.towny.chat"},{"l":"prog.ferrlix.kozers.messages"},{"l":"prog.ferrlix.kozers.util"}];updateSearchResults();

@@ -10,6 +10,8 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import prog.ferrlix.kozers.Kozers;
 import prog.ferrlix.kozers.integration.towny.TownyUtil;
 import prog.ferrlix.kozers.messages.Colors;
@@ -22,26 +24,41 @@ import java.util.Map;
 
 import static net.kyori.adventure.text.Component.text;
 
+/**
+ * Handles all interactions between player and plugin regarding Towny and chatting
+ */
 public class TownyChat{
-    private final Map<Player, Object> playerChatMap = new HashMap<>();
+    /**
+     * the towny chat map
+     */
+    private final Map<Player, Government> playerChatMap = new HashMap<>();
 
-    public Map<Player, Object> getPlayerChatMap(){return this.playerChatMap;}
+    /**
+     * get the map of players who are chatting in Government chats of some sort
+     * @return The map of players in chat
+     */
+    public Map<Player, Government> getPlayerChatMap(){return this.playerChatMap;}
+
+    /**
+     * internal chat types used in Map iteration and chat events
+     */
     public enum townyChatType{
         TOWN,
         NATION
     }
     TownyUtil townyUtil = new TownyUtil();
 
-
-    public void sendChat(Player speaker, Component message, townyChatType type){
+    /**
+     * send a towny chat
+     * @param speaker the Player who sent the message
+     * @param message the message the speaker sent
+     * @param type the Government type (Town | Nation) that the speaker's message should get sent
+     */
+    public void sendChat(Player speaker, Component message, @NotNull townyChatType type){
         Government govern = null;
         switch(type){
-            case TOWN -> {
-                govern = townyUtil.getTownOrNull(speaker);
-            }
-            case NATION -> {
-                govern = townyUtil.getNationOrNull(speaker);
-            }
+            case TOWN -> govern = townyUtil.getTownOrNull(speaker);
+            case NATION -> govern = townyUtil.getNationOrNull(speaker);
         }
         ArrayList<Player> targets = new ArrayList<>();
         Government finalGovern = govern;
@@ -68,15 +85,18 @@ public class TownyChat{
             player.sendMessage(componentMessage);
         }
     }
-    void sendChat(Player speaker, String message, townyChatType type){
+
+    /**
+     * send a towny chat
+     * @param speaker the Player who sent the message
+     * @param message the message the speaker sent
+     * @param type the Government type (Town | Nation) that the speaker's message should get sent
+     */
+    void sendChat(Player speaker, String message, @NotNull townyChatType type){
         Government govern = null;
         switch(type){
-            case TOWN -> {
-                govern = townyUtil.getTownOrNull(speaker);
-            }
-            case NATION -> {
-                govern = townyUtil.getNationOrNull(speaker);
-            }
+            case TOWN -> govern = townyUtil.getTownOrNull(speaker);
+            case NATION -> govern = townyUtil.getNationOrNull(speaker);
         }
         ArrayList<Player> targets = new ArrayList<>();
         Government finalGovern = govern;
@@ -183,17 +203,30 @@ public class TownyChat{
                 ConsoleCommandSender console = (ConsoleCommandSender) sender;
                 console.sendMessage("Console cannot join nation chat :D");
             });
+
+    /**
+     * internal, do not use
+     * @return command for main class
+     */
     public CommandAPICommand getTownCommand(){
         return this.townCommand;
     }
-
+    /**
+     * internal, do not use
+     * @return command for main class
+     */
     public CommandAPICommand getNationCommand(){
         return this.nationCommand;
     }
 
-
-    private Object addPlayerToChatMap(Player player, townyChatType type){
-        Object govern = null;
+    /**
+     * add a player to the towny chat map for handling
+     * @param player the Player key to add the map
+     * @param type the type to add, because a Player can have two Governments at the same time
+     * @return The Government value that was added with the Player key
+     */
+    public @Nullable Government addPlayerToChatMap(Player player, townyChatType type){
+        Government govern = null;
         switch(type){
             case TOWN -> govern = townyUtil.getTownOrNull(player);
             case NATION -> govern = townyUtil.getNationOrNull(player);
