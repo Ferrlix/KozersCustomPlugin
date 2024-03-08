@@ -12,3 +12,4 @@
 
 #make sure javadocs dont count toward project language synopsis
 javadocs/* -linguist-documentation
+javadocs/** -linguist-documentation
